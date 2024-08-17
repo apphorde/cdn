@@ -19,14 +19,17 @@ createServer(function (request, response) {
 
     const url = new URL(request.url, "http://localhost");
     const pathname = url.pathname.slice(1);
-    const [scope, name, file = "latest.mjs"] = pathname.split("/");
-    const fullPath = join(workingDir, scope, name, file);
-
-    // console.log(file);
+    console.log("p", pathname);
 
     if (nameRe.test(pathname)) {
       return notFound(response);
     }
+
+    const [scope, name, file = "latest.mjs"] = pathname.split("/");
+    console.log(scope, name, file);
+
+    const fullPath = join(workingDir, scope, name, file);
+    console.log(fullPath);
 
     if (!existsSync(fullPath) || !statSync(fullPath).isFile()) {
       return notFound(response);
