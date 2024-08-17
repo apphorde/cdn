@@ -25,7 +25,7 @@ createServer(function (request, response) {
     }
 
     const path = resolve(url.pathname);
-    const file = join(workingDir, path);
+    const file = join(workingDir, path, "index.mjs");
 
     if (!existsSync(file) || !statSync(file).isFile()) {
       return notFound(response);
