@@ -2,7 +2,7 @@ import createServer from "@cloud-cli/http";
 import { join, resolve } from "path";
 import { createReadStream, existsSync, statSync } from "fs";
 
-const nameRe = /@[a-z]+\/[a-z-]+/;
+const nameRe = /^@[a-z]+\/[a-z-]+$/;
 const workingDir = process.env.DATA_PATH;
 const mimeTypes = {
   css: "text/css",
@@ -19,15 +19,12 @@ createServer(function (request, response) {
 
     const url = new URL(request.url, "http://localhost");
     const pathname = url.pathname.slice(1);
+    const file = join(workingDir, pathname, "index.mjs");
+    console.log(file);
 
     if (nameRe.test(pathname)) {
       return notFound(response);
     }
-
-    const path = resolve(url.pathname);
-    const file = join(workingDir, path, "index.mjs");
-
-    console.log(file);
 
     if (!existsSync(file) || !statSync(file).isFile()) {
       return notFound(response);
