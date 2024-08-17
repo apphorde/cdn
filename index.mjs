@@ -2,7 +2,7 @@ import createServer from "@cloud-cli/http";
 import { join, resolve } from "path";
 import { createReadStream, existsSync, statSync } from "fs";
 
-const nameRe = /^@[a-z]+\/[a-z-]+$/;
+const nameRe = /^(@[a-z]+\/[a-z-]+|@[a-z]+\/[a-z-]+\/[a-z-.0-9]+)+$/;
 const workingDir = process.env.DATA_PATH;
 const mimeTypes = {
   css: "text/css",
@@ -19,14 +19,16 @@ createServer(function (request, response) {
 
     const url = new URL(request.url, "http://localhost");
     const pathname = url.pathname.slice(1);
-    const file = join(workingDir, pathname, "index.mjs");
-    console.log(file);
+    const [scope, name, file = "latest.mjs"] = pathname.split("/");
+    const fullPath = join(workingDir, scope, name, file);
+
+    // console.log(file);
 
     if (nameRe.test(pathname)) {
       return notFound(response);
     }
 
-    if (!existsSync(file) || !statSync(file).isFile()) {
+    if (!existsSync(fullPath) || !statSync(fullPath).isFile()) {
       return notFound(response);
     }
 
@@ -39,7 +41,7 @@ createServer(function (request, response) {
     response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
     response.setHeader("Content-Type", mimeTypes[extension] || "text/plain");
 
-    createReadStream(file).pipe(response);
+    createReadStream(fullPath).pipe(response);
   } catch (e) {
     console.log(e);
     if (!response.headersSent) {
