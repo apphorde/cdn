@@ -19,9 +19,8 @@ createServer(function (request, response) {
 
     const url = new URL(request.url, "http://localhost");
     const pathname = url.pathname.slice(1);
-    console.log("p", pathname);
 
-    if (nameRe.test(pathname)) {
+    if (!nameRe.test(pathname)) {
       return notFound(response);
     }
 
