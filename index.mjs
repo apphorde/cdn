@@ -25,16 +25,14 @@ createServer(function (request, response) {
     }
 
     const [scope, name, file = "latest.mjs"] = pathname.split("/");
-    console.log(scope, name, file);
-
-    const fullPath = join(workingDir, scope, name, file);
-    console.log(fullPath);
+    const partialPath = resolve(join(scope, name, file));
+    const fullPath = join(workingDir, partialPath);
 
     if (!existsSync(fullPath) || !statSync(fullPath).isFile()) {
       return notFound(response);
     }
 
-    const extension = path.split(".").pop();
+    const extension = fullPath.split(".").pop();
     if (!url.searchParams.has("nocache")) {
       response.setHeader("Cache-Control", "max-age=86400");
     }
