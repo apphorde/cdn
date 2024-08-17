@@ -25,7 +25,7 @@ createServer(function (request, response) {
     }
 
     const [scope, name, file = "latest.mjs"] = pathname.split("/");
-    const partialPath = resolve(join(scope, name, file));
+    const partialPath = resolve(join('/', scope, name, file));
     const fullPath = join(workingDir, partialPath);
     console.log(partialPath, fullPath);
 
