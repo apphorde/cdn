@@ -2,7 +2,7 @@ import createServer from "@cloud-cli/http";
 import { join, resolve } from "path";
 import { createReadStream, existsSync, statSync } from "fs";
 
-const nameRe = /@[a-z]+\/[a-z]+/;
+const nameRe = /@[a-z]+\/[a-z-]+/;
 const workingDir = process.env.DATA_PATH;
 const mimeTypes = {
   css: "text/css",
